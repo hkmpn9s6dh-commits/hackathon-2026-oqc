@@ -27,6 +27,7 @@ PASS  shot ids are zero-padded and complete
 PASS  all predictions are 0/1 ints                               [0, 1]
 PASS  method description present and within the Space's 200-char cap 170 chars
 PASS  predicted ones within a plausible band                     2367
+PASS  the organiser's own gates.check accepts the submission     {'admitted': True, 'reject': [], 'n_items': 10000}
 PASS  submission bit-array digest matches the recorded sidecar   af32b951b89c02e3 vs af32b951b89c02e3
 PASS  QSIM has 9 systems                                         9
 PASS  QSIM energies are finite and negative                      
@@ -34,4 +35,4 @@ PASS  2-site energy matches the closed form (U - sqrt(U^2+16t^2))/2 -0.828427125
 PASS  QSIM total is recorded and reproducible                    -27.430637
 PASS  QSIM total disagrees with the published floor by >1 (documented audit finding) diff 9.0142
 
-33 passed, 0 failed
+34 passed, 0 failed

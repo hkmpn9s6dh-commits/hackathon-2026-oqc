@@ -129,6 +129,11 @@ def main():
           bool(sub.get("method")) and len(sub["method"]) <= 200, "%d chars" % len(sub.get("method", "")))
     ones = sum(preds.values())
     check("predicted ones within a plausible band", 1500 <= ones <= 3200, str(ones))
+    sys.path.insert(0, os.path.join(HERE, "scripts", "vendor"))
+    import gates  # vendored from the organiser Space
+    verdict = gates.check("qec", preds)
+    check("the organiser's own gates.check accepts the submission",
+          verdict["admitted"] and verdict["n_items"] == 10000, str(verdict))
     bits = np.array([preds["shot_%05d" % i] for i in range(10000)], dtype=np.uint8)
     import hashlib
     digest = hashlib.sha256(bits.tobytes()).hexdigest()

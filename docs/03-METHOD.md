@@ -90,7 +90,7 @@ python bench_qec.py --decoder mwpm      --shots 20000 --seed 101
 python bench_qec.py --decoder mwpm_corr --shots 20000 --seed 101
 python scripts/validate_hybrid.py 10000        # 四个种子，约 5 分钟
 python make_submission.py                     # 生成 out/predictions_qec.json
-python verify.py                              # 33 条断言
+python verify.py                              # 34 条断言
 ```
 
 提交件的比特数组摘要 `af32b951b89c02e3…`（完整值见 `out/predictions_qec.sha256`），

@@ -29,7 +29,7 @@
 6. 把 `submission_id` 与榜单截图贴回 **AME-1532**，我把状态推到 `in_review`。
 
 > 每日配额：一个账号一天一次（两季合计，按 KST 零点重置）。所以别在没把握的时候浪费机会——
-> 本轮已经把能验的都验过了（33 条断言），可以直接交。
+> 本轮已经把能验的都验过了（34 条断言），可以直接交。
 
 ## Season 1 要不要交？
 
@@ -44,8 +44,8 @@
 ## 复核
 
 ```bash
-python verify.py          # 33 条断言，退出码即结论
+python verify.py          # 34 条断言，退出码即结论
 python scripts/validate_hybrid.py 10000   # 四个种子的完整阶梯，约 5 分钟
 ```
 
-`out/verify.log` 是最近一次运行的全文（33 passed, 0 failed）。
+`out/verify.log` 是最近一次运行的全文（34 passed, 0 failed）。

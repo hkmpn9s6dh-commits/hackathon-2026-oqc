@@ -19,7 +19,7 @@ bench_qec.py          单个解码器在一个种子上的基准（含 95% Wilso
 bench_qsim.py         Season 1：9 个费米-哈伯德系统的精确对角化（审计用）
 train_cnn.py          试过的 3D 卷积解码器（未采用，见 docs/03 的"没采用"一节）
 make_submission.py    生成 out/predictions_qec.json 与 qsim 版
-verify.py             33 条断言，退出码即结论
+verify.py             34 条断言，退出码即结论
 scripts/validate_hybrid.py   四个种子的完整阶梯（约 5 分钟）
 src/oqc/              dem 解析、三种解码器、指标
 docs/                 01 选赛 · 02 赛制 · 03 方法 · 04 结果 · 05 提交 · 06 教训
@@ -37,7 +37,7 @@ py -3 -m venv .venv && ./.venv/Scripts/python.exe -m pip install -i https://pypi
 ./.venv/Scripts/python.exe bench_qec.py --decoder mwpm_corr --shots 20000 --seed 101   # 0.0112
 ./.venv/Scripts/python.exe scripts/validate_hybrid.py 10000                             # 0.0099
 ./.venv/Scripts/python.exe make_submission.py                                          # 提交件
-./.venv/Scripts/python.exe verify.py                                                   # 33 passed
+./.venv/Scripts/python.exe verify.py                                                   # 34 passed
 ```
 
 依赖见 `requirements.txt`。全程 CPU，不需要量子硬件、不需要 GPU。
