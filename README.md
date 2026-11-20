@@ -1,4 +1,4 @@
-# OQC · Season 2 — 表面码逻辑错误率解码
+# 《一票之差》· OQC Season 2 — 表面码逻辑错误率解码
 
 > Open Quantum Challenge（FINAL-Bench / Hugging Face）· **QEC Decoder** 赛季的参赛作品。
 > 判据：对 10000 个探测器镜头各判一个逻辑观测量比特，逻辑错误率越低越好。

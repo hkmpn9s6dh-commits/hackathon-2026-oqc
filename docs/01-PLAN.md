@@ -28,6 +28,7 @@
 ### 选定
 
 **Open Quantum Challenge（OQC）· Season 2 — QEC Decoder**，主办 FINAL-Bench（VIDRAFT 构建），
+作品名 **《一票之差》**（判决靠投票，名次也只差一票），
 承载在 Hugging Face Space `FINAL-Bench/open-quantum-challenge`。
 
 选它的理由不是“题目好听”，而是**它是唯一一个判据完全客观、数据完全公开、本机能独自跑通的**：
