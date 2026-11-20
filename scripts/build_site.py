@@ -87,6 +87,11 @@ def main():
     with open(out_path, "w", encoding="utf-8") as fh:
         fh.write(page)
     print("wrote %s (%.0f KB)" % (out_path, os.path.getsize(out_path) / 1024))
+    # GitHub Pages serves /docs on main, so the built page also lands there
+    import shutil
+    pages_dir = os.path.join(HERE, "docs")
+    shutil.copyfile(out_path, os.path.join(pages_dir, "index.html"))
+    print("copied to docs/index.html for GitHub Pages")
 
     # cheap structural checks: no placeholders left, no external requests
     left = re.findall(r"__[A-Z_]+__", page)
