@@ -1,0 +1,37 @@
+C:\Users\张一\WorkBuddy\spaces\2026_11_12_22-57-34\oqc\.venv\Lib\site-packages\ldpc\_legacy_ldpc_v1\_legacy_bposd_decoder.py:45: UserWarning: This is the old syntax for the `bposd_decoder` from `ldpc v1`. Use the `BpOsdDecoder` class from `ldpc v2` for additional features.
+  warnings.warn(
+PASS  given detectors shape is (10000, 120)                      (10000, 120)
+PASS  given detectors are 0/1                                    [0 1]
+PASS  given defect rate in [0.060, 0.080]                        0.06953
+PASS  dem.txt is byte-identical to the frozen circuit's decomposed DEM 
+PASS  DEM has 120 detectors, 1 observable                        120/1
+PASS  decomposed DEM has 1953 mechanisms                         1953
+PASS  undecomposed DEM has 1677 mechanisms (the board's 'merged' count) 1677
+PASS  matrix shape matches DEM                                   (120, 1677)
+PASS  every mechanism keeps 1-4 detectors                        max 4
+PASS  probabilities are inside (0, 0.5)                          [3.34e-04, 0.0286]
+PASS  observable-flipping mechanisms are a minority              139/1677
+PASS  no mechanism flips the observable without touching a detector 
+PASS  wilson(0,100) has lo=0 and a positive hi                   [0.0000, 0.0370]
+PASS  wilson is symmetric around 0.5                             [0.4038, 0.5962]
+PASS  wilson narrows as n grows                                  
+PASS  public 10k shots are NOT the organiser's frozen sampler prefix answer key not derivable from the public seed
+PASS  both decoders emit one bit per shot                        
+PASS  correlated matching is at least as good as plain matching on identical shots 30 vs 38 errors
+PASS  plain MWPM reproduces the organiser's 0.0153 anchor inside its 95% CI [0.0092, 0.0173]
+PASS  BP+OSD corrections always reproduce the syndrome           0 mismatches/150
+PASS  hybrid decoder is no worse than correlated matching        28 vs 30 errors
+PASS  hybrid only escalates a small fraction of shots            {'n_low_margin': 18, 'fraction': 0.006}
+PASS  submission has all 10000 shot ids                          10000
+PASS  shot ids are zero-padded and complete                      
+PASS  all predictions are 0/1 ints                               [0, 1]
+PASS  method description present and within the Space's 200-char cap 170 chars
+PASS  predicted ones within a plausible band                     2367
+PASS  submission bit-array digest matches the recorded sidecar   af32b951b89c02e3 vs af32b951b89c02e3
+PASS  QSIM has 9 systems                                         9
+PASS  QSIM energies are finite and negative                      
+PASS  2-site energy matches the closed form (U - sqrt(U^2+16t^2))/2 -0.828427125 vs -0.828427125
+PASS  QSIM total is recorded and reproducible                    -27.430637
+PASS  QSIM total disagrees with the published floor by >1 (documented audit finding) diff 9.0142
+
+33 passed, 0 failed

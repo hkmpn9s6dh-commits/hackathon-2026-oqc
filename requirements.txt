@@ -1,0 +1,5 @@
+numpy>=2.0
+scipy>=1.14
+stim>=1.16
+pymatching>=2.4
+ldpc>=2.4

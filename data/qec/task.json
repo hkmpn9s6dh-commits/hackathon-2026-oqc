@@ -1,0 +1,16 @@
+{
+ "board": "QEC",
+ "files": {
+  "detectors.npy": "uint8 array [shots x num_detectors] - decode each row",
+  "dem.txt": "stim DetectorErrorModel (decomposed) for building a decoder"
+ },
+ "metric": "logical error rate = fraction of shots whose predicted observable bit is wrong (lower is better)",
+ "submit_format": {
+  "predictions": {
+   "shot_<i:05d>": "0 or 1"
+  },
+  "hf_user": "<name>",
+  "method": "<decoder description>"
+ },
+ "updated": "2026-11-19"
+}

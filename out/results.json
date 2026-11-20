@@ -1,0 +1,124 @@
+{
+  "pooled": {
+    "mwpm": {
+      "errors": 569,
+      "n": 40000,
+      "ler": 0.014225,
+      "ci95": [
+        0.013110278574570098,
+        0.015433020127022598
+      ]
+    },
+    "mwpm_corr": {
+      "errors": 452,
+      "n": 40000,
+      "ler": 0.0113,
+      "ci95": [
+        0.010310065707734864,
+        0.012383794773904475
+      ]
+    },
+    "ensemble": {
+      "errors": 422,
+      "n": 40000,
+      "ler": 0.01055,
+      "ci95": [
+        0.009594682231809001,
+        0.011599322295996146
+      ]
+    },
+    "hybrid": {
+      "errors": 395,
+      "n": 40000,
+      "ler": 0.009875,
+      "ci95": [
+        0.008951935787329883,
+        0.01089219838202449
+      ]
+    }
+  },
+  "per_seed": [
+    {
+      "seed": 202,
+      "mwpm": 0.0127,
+      "mwpm_corr": 0.0103,
+      "ensemble": 0.009,
+      "ensemble_errors": 90,
+      "hybrid": 0.0082,
+      "hybrid_errors": 82,
+      "hybrid_seconds": 39.4,
+      "low_margin": {
+        "n_low_margin": 53,
+        "fraction": 0.0053
+      },
+      "ci95": [
+        0.006611570524524473,
+        0.010166144148606698
+      ]
+    },
+    {
+      "seed": 303,
+      "mwpm": 0.0165,
+      "mwpm_corr": 0.0123,
+      "ensemble": 0.0114,
+      "ensemble_errors": 114,
+      "hybrid": 0.011,
+      "hybrid_errors": 110,
+      "hybrid_seconds": 42.1,
+      "low_margin": {
+        "n_low_margin": 69,
+        "fraction": 0.0069
+      },
+      "ci95": [
+        0.009135238834528707,
+        0.013240325368726968
+      ]
+    },
+    {
+      "seed": 404,
+      "mwpm": 0.0135,
+      "mwpm_corr": 0.0109,
+      "ensemble": 0.0104,
+      "ensemble_errors": 104,
+      "hybrid": 0.01,
+      "hybrid_errors": 100,
+      "hybrid_seconds": 35.2,
+      "low_margin": {
+        "n_low_margin": 47,
+        "fraction": 0.0047
+      },
+      "ci95": [
+        0.008229306747947238,
+        0.012147025480263973
+      ]
+    },
+    {
+      "seed": 505,
+      "mwpm": 0.0142,
+      "mwpm_corr": 0.0117,
+      "ensemble": 0.0114,
+      "ensemble_errors": 114,
+      "hybrid": 0.0103,
+      "hybrid_errors": 103,
+      "hybrid_seconds": 35.8,
+      "low_margin": {
+        "n_low_margin": 52,
+        "fraction": 0.0052
+      },
+      "ci95": [
+        0.008500602349489014,
+        0.012475499471235538
+      ]
+    }
+  ],
+  "board": {
+    "anchor_mwpm": 0.0153,
+    "entries": [
+      0.0083,
+      0.0084,
+      0.0088,
+      0.0093
+    ],
+    "snapshot": "2026-11-21"
+  }
+}

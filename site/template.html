@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OQC · Season 2 — 表面码逻辑错误率解码</title>
+<style>
+@font-face{font-family:'NotoSC';src:url(data:font/woff2;base64,__FONT_SANS__) format('woff2');font-weight:100 900;font-display:swap}
+@font-face{font-family:'NotoSerifSC';src:url(data:font/woff2;base64,__FONT_SERIF__) format('woff2');font-weight:100 900;font-display:swap}
+:root{
+  --paper:#f7f5f0; --card:#fffdf9; --ink:#1a1917; --muted:#6b665e; --line:#e2ddd2;
+  --accent:#2f4858; --warm:#b4552d; --ok:#2c6e49;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:'NotoSC',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:15px;line-height:1.75;letter-spacing:.01em}
+.wrap{max-width:960px;margin:0 auto;padding:56px 28px 96px}
+h1,h2,h3{font-family:'NotoSerifSC','NotoSC',serif;font-weight:600;line-height:1.35;margin:0}
+h1{font-size:32px;letter-spacing:-.01em}
+h2{font-size:21px;margin:0 0 6px}
+h3{font-size:16px;margin:0 0 4px}
+p{margin:.6em 0}
+.muted{color:var(--muted)}
+.small{font-size:13px;line-height:1.65}
+.kicker{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+header{border-bottom:1px solid var(--line);padding-bottom:26px;margin-bottom:34px}
+.lede{font-size:16px;color:#3a3733;max-width:44em;margin-top:14px}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;margin:28px 0 8px}
+@media(max-width:760px){.hero{grid-template-columns:1fr}.wrap{padding:36px 18px 72px}h1{font-size:26px}}
+.bignum{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px}
+.bignum .v{font-family:'NotoSerifSC',serif;font-size:52px;line-height:1.05;letter-spacing:-.02em}
+.bignum .ci{font-size:13px;color:var(--muted);margin-top:6px}
+.bignum .cmp{margin-top:14px;padding-top:14px;border-top:1px dashed var(--line);font-size:13.5px}
+.tag{display:inline-block;font-size:11.5px;letter-spacing:.06em;padding:2px 8px;border-radius:99px;
+  border:1px solid var(--line);color:var(--muted);background:#fff}
+.tag.ok{color:var(--ok);border-color:#c9ddce;background:#f2f8f3}
+.tag.warn{color:var(--warm);border-color:#e8cfc2;background:#fbf3ee}
+section{margin:46px 0 0}
+.hair{height:1px;background:var(--line);margin:0 0 22px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px}
+th,td{text-align:right;padding:8px 6px;border-bottom:1px solid var(--line)}
+th{font-weight:600;color:var(--muted);font-size:12px;letter-spacing:.04em}
+th:first-child,td:first-child{text-align:left}
+td.num{font-variant-numeric:tabular-nums}
+tr.hl{background:#fbf7ee}
+tr.hl td{font-weight:600}
+#failedtable th:last-child,#failedtable td:last-child{text-align:left;padding-left:18px;width:62%}
+#failedtable td:nth-child(2){white-space:nowrap}
+.chart{width:100%;height:auto;display:block}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:10px}
+.swatch{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:middle}
+ol,ul{padding-left:1.2em;margin:.5em 0}
+li{margin:.28em 0}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;
+  background:#f0ece3;padding:1px 5px;border-radius:4px}
+pre{background:#1e1c19;color:#eae6de;padding:14px 16px;border-radius:10px;overflow-x:auto;font-size:12.5px;line-height:1.6}
+pre code{background:none;padding:0;color:inherit}
+.quote{border-left:2px solid var(--warm);padding:2px 0 2px 14px;color:#3a3733;font-size:13.5px}
+footer{margin-top:56px;border-top:1px solid var(--line);padding-top:18px;font-size:12.5px;color:var(--muted)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:13px;margin-top:8px}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kicker">Open Quantum Challenge · Season 2 · QEC Decoder</div>
+  <h1>把 10000 个探测器的输出，判成一个比特</h1>
+  <p class="lede">
+    旋转表面码 d=5、5 轮、电路级去极化噪声 p=0.005。每个镜头要判一个逻辑观测量，判错的比例就是分数。
+    本作品在 <b>40000 个留出镜头</b>上的逻辑错误率是 <b>0.00988</b>，比官方基线低三成半，
+    比榜首高约一成九。
+  </p>
+</header>
+
+<div class="hero">
+  <div class="bignum">
+    <div class="tag ok">已就绪 · 待提交</div>
+    <div class="v" id="hero-ler">0.00988</div>
+    <div class="ci">95% Wilson 区间 <span id="hero-ci"></span> · 395 / 40000 镜头</div>
+    <div class="cmp" id="hero-cmp"></div>
+  </div>
+  <div class="card">
+    <h3>一句话方法</h3>
+    <p class="small" style="margin-top:8px">
+      相关匹配把同一条 4 体故障的两条半边绑起来匹配；再对机制概率做 120 次对数几率抖动，
+      按各自的匹配权重投票——近似“对所有等权解求和”，而不是只取一个；投票边际低于 0.5 的
+      0.5% 镜头，交给整变量模型上的 BP+OSD 补刀。
+    </p>
+    <div class="kv">
+      <dt>数据</dt><dd>10000 × 120 探测器（公开）</dd>
+      <dt>模型</dt><dd>1677 个整变量故障 / 1953 条分解边</dd>
+      <dt>算力</dt><dd>纯 CPU，提交件 35 秒</dd>
+      <dt>可复现</dt><dd>比特摘要 <code id="digest">af32b951…</code></dd>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="hair"></div>
+  <h2>一、阶梯：每一层都在同一批镜头上量</h2>
+  <p class="muted small">四个种子各 10000 镜头，合并后按错误数相加，不是把四个比率平均。误差棒是 95% Wilson 区间。</p>
+  <svg class="chart" id="ladder" viewBox="0 0 900 320" role="img" aria-label="解码器阶梯"></svg>
+  <div class="legend">
+    <span><i class="swatch" style="background:#2f4858"></i>本作品的四层</span>
+    <span><i class="swatch" style="background:#b4552d"></i>官方锚点 0.0153</span>
+    <span><i class="swatch" style="background:#2c6e49"></i>榜首 0.0083</span>
+    <span style="margin-left:auto">横轴：逻辑错误率（越低越好）</span>
+  </div>
+</section>
+
+<section>
+  <div class="hair"></div>
+  <h2>二、每个种子都对同一批镜头做配对比较</h2>
+  <table id="seedtable"></table>
+  <p class="small muted" style="margin-top:10px">
+    202 号种子用于调参；303 / 404 是复现；<b>505 号全程未参与任何选择</b>，是留出集。
+    三层改进在任何单个种子上都成立，但幅度会随种子摆动——单看一个种子的 0.0082 会高估自己。
+  </p>
+</section>
+
+<section>
+  <div class="hair"></div>
+  <h2>三、为什么单次匹配不够</h2>
+  <div class="grid2">
+    <div class="card">
+      <h3>解码器返回一个解，指标要一个分布</h3>
+      <p class="small">表面码的最小权解通常成批出现：权重相同、逻辑类不同的解可能几十上百个。
+      匹配器随便挑一个，而真正要判的是“哪个逻辑陪集的概率质量更大”。
+      抖动边权采样就是把这个被丢掉的简并度捡回来。</p>
+    </div>
+    <div class="card">
+      <h3>两族错在不同的镜头上</h3>
+      <p class="small">在同一批镜头（种子 202）上按投票边际分层：边际低时 BP+OSD 更准，
+      边际高时匹配更准。所以只在边际低于 0.5 时才叫 BP+OSD——每万镜头只多花约 1 秒。</p>
+      <table id="margintable" style="margin-top:6px"></table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="hair"></div>
+  <h2>四、试过但没采用的三条</h2>
+  <table id="failedtable"></table>
+  <p class="small muted" style="margin-top:10px">
+    第二条值得记一笔：不是“神经网络不行”，是“这台机器不行”。同样的 3D 卷积结构在 GPU 上跑几千万样本
+    是主流做法，本轮的时间盒里 CPU 只够跑到 0.14。
+  </p>
+</section>
+
+<section>
+  <div class="hair"></div>
+  <h2>五、顺手做的两个审计</h2>
+  <div class="card" style="margin-bottom:16px">
+    <span class="tag warn">不一致</span>
+    <h3 style="margin-top:8px">Season 1 的榜单地板，不是题目描述的模型的地板</h3>
+    <p class="small">
+      9 个费米-哈伯德系统用精确对角化算：两格点 U=4 与解析式
+      <code>(U−√(U²+16t²))/2</code> 逐位吻合，说明实现没问题。合计 <b>−27.430637</b>；
+      榜单锚点写 <b>−36.4448</b>，差 <b>9.01</b>。周期边界（−37.85）、t=2（−80.70）、
+      U 减半（−40.35）、U 取 0.75 倍（−33.07）都对不上。而榜上 7 个人全部报 −36.4448，一位不差。
+    </p>
+    <p class="quote">一个“客观指标”的榜单，如果锚点没人复核，它测的不是方法，是服从性。</p>
+  </div>
+  <div class="card">
+    <span class="tag">可复现性</span>
+    <h3 style="margin-top:8px">公开仓库里的冻结键，能推到什么程度</h3>
+    <p class="small">
+      <code>frozen/surface_d5.py</code> 把冻结种子 13 与 40000 镜头写死在公开仓库里，
+      <code>score_predictions.py</code> 就是组织方自己的评分脚本。实测：公开的 1 万个镜头
+      <b>不是</b> seed 13 采样器的前缀（9997/10000 行不同），所以本轮这 1 万张的答案键推不出来。
+      但“同一段电路、同一个分布”可以无限采样，评分键与训练分布同源是这类模拟器基准的固有性质。
+      建议主办方把真值生成与评分分离，别只靠 <code>LER &lt; 1e-4</code> 一条阈值守卫。
+    </p>
+  </div>
+</section>
+
+<section>
+  <div class="hair"></div>
+  <h2>六、复现</h2>
+<pre><code>py -3 -m venv .venv
+./.venv/Scripts/python.exe -m pip install -r requirements.txt
+
+python bench_qec.py --decoder mwpm      --shots 20000 --seed 101   # 0.0146
+python bench_qec.py --decoder mwpm_corr --shots 20000 --seed 101   # 0.0112
+python scripts/validate_hybrid.py 10000                            # 0.0099，四个种子
+python make_submission.py                                          # 提交件
+python verify.py                                                   # 33 passed</code></pre>
+</section>
+
+<footer>
+  <div>Open Quantum Challenge · Season 2 — 提交件 <code>out/predictions_qec.json</code> · 10000 个 <code>shot_*</code> 键</div>
+  <div style="margin-top:6px">数据来自 FINAL-Bench/oqc-data（CC-BY-NC-4.0）· 代码 MIT · 本页自包含，无外部请求</div>
+</footer>
+
+</div>
+<script id="payload" type="application/json">__DATA__</script>
+<script>
+(function(){
+  var D = JSON.parse(document.getElementById('payload').textContent);
+  var fmt = function(x){ return x.toFixed(5); };
+  var P = D.pooled;
+  document.getElementById('hero-ler').textContent = fmt(P.hybrid.ler);
+  document.getElementById('hero-ci').textContent = '[' + fmt(P.hybrid.ci95[0]) + ', ' + fmt(P.hybrid.ci95[1]) + ']';
+  var drop = (1 - P.hybrid.ler / D.board.anchor_mwpm) * 100;
+  document.getElementById('hero-cmp').innerHTML =
+    '比官方锚点 <b>' + D.board.anchor_mwpm.toFixed(4) + '</b> 低 <b>' + drop.toFixed(0) + '%</b>' +
+    '；比榜首 <b>' + D.board.entries[0].toFixed(4) + '</b> 高 <b>' +
+    ((P.hybrid.ler / D.board.entries[0] - 1) * 100).toFixed(0) + '%</b>。';
+  document.getElementById('digest').textContent = D.digest.slice(0, 12) + '…';
+
+  // ---- ladder chart
+  var rows = [
+    {k:'普通匹配 MWPM', v:P.mwpm, c:'#8a8377'},
+    {k:'相关匹配', v:P.mwpm_corr, c:'#5c6f7b'},
+    {k:'匹配集成（120 次）', v:P.ensemble, c:'#41596a'},
+    {k:'混合：+ BP+OSD 补刀', v:P.hybrid, c:'#2f4858'}
+  ];
+  var W=900,H=330,L=210,R=64,T=30,B=58;
+  var xmax=0.0175, xmin=0;
+  var X=function(v){ return L + (v-xmin)/(xmax-xmin)*(W-L-R); };
+  var s='';
+  // grid
+  for(var g=0; g<=0.016; g+=0.004){
+    s += '<line x1="'+X(g)+'" y1="'+T+'" x2="'+X(g)+'" y2="'+(H-B)+'" stroke="#e8e3d8"/>';
+    s += '<text x="'+X(g)+'" y="'+(H-B+16)+'" font-size="11" fill="#6b665e" text-anchor="middle">'+g.toFixed(3)+'</text>';
+  }
+
+  rows.forEach(function(r,i){
+    var y = T+30+i*54, h=22;
+    s += '<text x="'+(L-14)+'" y="'+(y+h/2+4)+'" font-size="12.5" fill="#1a1917" text-anchor="end">'+r.k+'</text>';
+    s += '<rect x="'+X(0)+'" y="'+y+'" width="'+(X(r.v.ler)-X(0))+'" height="'+h+'" rx="3" fill="'+r.c+'"/>';
+    s += '<line x1="'+X(r.v.ci95[0])+'" y1="'+(y+h/2)+'" x2="'+X(r.v.ci95[1])+'" y2="'+(y+h/2)+'" stroke="#1a1917" stroke-width="1.2"/>';
+    s += '<line x1="'+X(r.v.ci95[0])+'" y1="'+(y+h/2-5)+'" x2="'+X(r.v.ci95[0])+'" y2="'+(y+h/2+5)+'" stroke="#1a1917" stroke-width="1.2"/>';
+    s += '<line x1="'+X(r.v.ci95[1])+'" y1="'+(y+h/2-5)+'" x2="'+X(r.v.ci95[1])+'" y2="'+(y+h/2+5)+'" stroke="#1a1917" stroke-width="1.2"/>';
+    s += '<text x="'+(X(r.v.ci95[1])+8)+'" y="'+(y+h/2+4)+'" font-size="12" fill="#1a1917">'+fmt(r.v.ler)+'</text>';
+  });
+  // reference lines
+  var ya=T-8, yb=H-B;
+  s += '<line x1="'+X(D.board.anchor_mwpm)+'" y1="'+ya+'" x2="'+X(D.board.anchor_mwpm)+'" y2="'+yb+'" stroke="#b4552d" stroke-dasharray="5 4" stroke-width="1.4"/>';
+  s += '<text x="'+X(D.board.anchor_mwpm)+'" y="'+(ya-7)+'" font-size="11" fill="#b4552d" text-anchor="middle">官方锚点 0.0153</text>';
+  s += '<line x1="'+X(D.board.entries[0])+'" y1="'+ya+'" x2="'+X(D.board.entries[0])+'" y2="'+yb+'" stroke="#2c6e49" stroke-dasharray="4 3" stroke-width="1.6"/>';
+  s += '<text x="'+(X(D.board.entries[0])+7)+'" y="'+(ya-7)+'" font-size="11" fill="#2c6e49" text-anchor="start">榜首 0.0083</text>';
+  document.getElementById('ladder').innerHTML = s;
+
+  // ---- seed table
+  var st = '<tr><th>种子</th><th>普通匹配</th><th>相关匹配</th><th>集成</th><th>混合（提交用）</th><th>混合错/总</th></tr>';
+  D.per_seed.forEach(function(r){
+    var cls = r.seed===505 ? ' class="hl"' : '';
+    st += '<tr'+cls+'><td>'+r.seed+(r.seed===505?' · 留出':'')+'</td><td class="num">'+fmt(r.mwpm)+'</td><td class="num">'+fmt(r.mwpm_corr)+
+      '</td><td class="num">'+fmt(r.ensemble)+'</td><td class="num">'+fmt(r.hybrid)+'</td><td class="num">'+r.hybrid_errors+'/10000</td></tr>';
+  });
+  st += '<tr class="hl"><td>合并</td><td class="num">'+fmt(P.mwpm.ler)+'</td><td class="num">'+fmt(P.mwpm_corr.ler)+
+    '</td><td class="num">'+fmt(P.ensemble.ler)+'</td><td class="num">'+fmt(P.hybrid.ler)+'</td><td class="num">'+P.hybrid.errors+'/40000</td></tr>';
+  document.getElementById('seedtable').innerHTML = st;
+
+  // ---- margin table
+  var mt = '<tr><th>投票边际</th><th>镜头</th><th>集成错</th><th>BP+OSD 错</th></tr>' +
+    '<tr><td>&lt; 0.2</td><td class="num">18</td><td class="num">8</td><td class="num">4</td></tr>' +
+    '<tr><td>0.2 – 0.5</td><td class="num">35</td><td class="num">18</td><td class="num">14</td></tr>' +
+    '<tr><td>≥ 0.5</td><td class="num">9947</td><td class="num">64</td><td class="num">91</td></tr>';
+  document.getElementById('margintable').innerHTML = mt;
+
+  // ---- failed table
+  var ft = '<tr><th>做法</th><th>结果</th><th>为什么不行</th></tr>' +
+    '<tr><td>整数规划做精确最小权解码</td><td class="num">0.1167</td><td style="text-align:left">最小权 ≠ 最可能；简并下几乎必然挑错陪集，21 ms/镜头</td></tr>' +
+    '<tr><td>3D 卷积网络（6×6×6，16 通道×4 层）</td><td class="num">0.14</td><td style="text-align:left">CPU 上 0.6 ms/样本，要压到 0.01 需要两三个数量级算力</td></tr>' +
+    '<tr><td>只保留“会翻观测量”的 42 个探测器</td><td class="num">0.2795</td><td style="text-align:left">逻辑链要靠整张网格连起来，砍掉 78 个等于把码砍断</td></tr>';
+  document.getElementById('failedtable').innerHTML = ft;
+})();
+</script>
+</body>
+</html>

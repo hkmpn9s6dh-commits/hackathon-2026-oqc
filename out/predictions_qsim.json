@@ -1,0 +1,15 @@
+{
+  "hf_user": "hkmpn9s6dh-commits",
+  "method": "Exact diagonalisation (sparse Lanczos per (N_up,N_dn) sector, open BC, H=-t sum c^dag c + U sum n_up n_dn). Audit by-product, not recommended.",
+  "predictions": {
+    "hub_1x2_U4": -0.828427125,
+    "hub_1x3_U4": -1.236067977,
+    "hub_2x2_U4": -2.720566233,
+    "hub_2x2_U8": -1.504315913,
+    "hub_1x4_U4": -1.953145309,
+    "hub_2x3_U4": -4.499463785,
+    "hub_2x2_U12": -1.007349173,
+    "hub_2x4_U4": -6.332593637,
+    "hub_3x3_U4": -7.348708035
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "decoder": "bposd_decomposed_ps_it30_osd_cs10",
+  "dem": "decomposed",
+  "shots": 5000,
+  "seed": 101,
+  "p": 0.005,
+  "d": 5,
+  "errors": 60,
+  "ler": 0.012,
+  "ci95": [
+    0.009334492301086808,
+    0.01541481231319195
+  ],
+  "seconds": 78.92,
+  "sha256": "40797bd0e39da93b993db6bac25117600e111b1259dad6e0d1d1b5cc78d95655"
+}

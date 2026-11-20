@@ -1,0 +1,16 @@
+{
+  "decoder": "bposd_undecomposed_ps_it60_osd_cs20",
+  "dem": "undecomposed",
+  "shots": 10000,
+  "seed": 202,
+  "p": 0.005,
+  "d": 5,
+  "errors": 109,
+  "ler": 0.0109,
+  "ci95": [
+    0.009044443879129444,
+    0.013131197126621787
+  ],
+  "seconds": 170.87,
+  "sha256": "ad70e52512b37dbab1a4d9580e44b4979cfccb378b85a30bf265a717d9b5dfa6"
+}
